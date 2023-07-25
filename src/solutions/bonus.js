@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
-const wsUrl = 'http://localhost:3044';
-// melvyn wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+// local wsUrl = 'http://localhost:3044';
 
 class Game {
   static COLORS = ['#ff4500', '#00cc78', '#2450a5', '#fed734', '#f9fafc'];
