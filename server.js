@@ -6,7 +6,7 @@ import { Server } from 'socket.io';
 const fastify = Fastify();
 
 const corsParam = {
-  origin: 'http://localhost:5173', // melvyn origin: 'https://rplacejs.vercel.app/',
+  origin: 'https://rplacejs.vercel.app', // dev origin: 'http://localhost:5173',
   methods: ['GET'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
