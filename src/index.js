@@ -1,7 +1,5 @@
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:3044');
-
 class Game {
   static COLORS = ['#ff4500', '#00cc78', '#2450a5', '#fed734', '#f9fafc'];
   static BOARD_SIZE = [25, 25];
