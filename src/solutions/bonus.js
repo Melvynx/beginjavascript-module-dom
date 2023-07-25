@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
-
-const socket = io('http://localhost:3044');
+const wsUrl = 'http://localhost:3044';
+// melvyn wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 
 class Game {
   static COLORS = ['#ff4500', '#00cc78', '#2450a5', '#fed734', '#f9fafc'];
@@ -24,7 +24,7 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
-    this.socket = io('https://beginjavascript-module-dom-production.up.railway.app');
+    this.socket = io(wsUrl, { transports: ['websocket'] });
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
@@ -61,8 +61,7 @@ class Game {
 
     this.socket.emit('pixel change', {
       pixelIndex: pixel.index,
-      color: this.colorPicker.currentColor,
-      userAgent: navigator.userAgent,
+      color: this.colorPicker.currentColor
     });
   }
 
