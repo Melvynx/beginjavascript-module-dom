@@ -42,8 +42,9 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(3044, () => {
-  console.log('listening on *:3044');
+const port = process.env.PORT ?? 3044;
+httpServer.listen(port, () => {
+  console.log(`listening on *:${port}`);
 });
 
 function canUserClick(ip, userAgent) {
