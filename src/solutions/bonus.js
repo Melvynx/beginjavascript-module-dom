@@ -24,7 +24,7 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
-    this.socket = io('http://localhost:3044'); // Mettez l'adresse de votre serveur ici
+    this.socket = io('https://beginjavascript-module-dom-production.up.railway.app');
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
