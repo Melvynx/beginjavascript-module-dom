@@ -4,58 +4,20 @@ class Game {
   static PIXEL_SIZE = 20;
   static TIME_TO_WAIT = 5000;
 
-  lastPixelAddedDate = null;
-
   constructor() {
-    this.warning = new Warning();
-    this.colorPicker = new ColorPicker(Game.COLORS, Game.COLORS[0]);
+    // 🦁 Initialise un `ColorPicker`
   }
 
   init() {
-    this.board = document.querySelector('#board');
-    this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
-    this.initPixel();
-    this.colorPicker.initPixelPicker();
+    // 🦁 Récupère le board
+    // 💡 Définit le style suivant pour que ce soit beau
+    // ⚡️ this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
+    // 🦁 Appels la méthode this.initPixels()
+    // 🦁 Appels la méthode this.colorPicker.initPixelPicker()
   }
 
-  initPixel() {
-    for (let i = 0; i < Game.BOARD_SIZE[0] * Game.BOARD_SIZE[1]; i++) {
-      const pixel = new Pixel(Game.COLORS[Game.COLORS.length - 1]);
-      pixel.element.addEventListener('click', (e) => this.onPixelClick(pixel));
-      this.board.append(pixel.element);
-    }
-  }
-
-  onPixelClick(pixel) {
-    if (
-      this.lastPixelAddedDate &&
-      new Date() - this.lastPixelAddedDate < Game.TIME_TO_WAIT
-    ) {
-      this.warning.showWarning();
-      return;
-    }
-
-    pixel.color = this.colorPicker.currentColor;
-    this.lastPixelAddedDate = new Date();
-
-    this.colorPicker.toggleTimeLeft(this.lastPixelAddedDate);
-  }
-}
-
-class Warning {
-  constructor() {
-    this.element = document.querySelector('#warning');
-    this.interval = null;
-  }
-
-  showWarning() {
-    this.element.classList.remove('hidden');
-
-    clearInterval(this.interval);
-    this.interval = setTimeout(() => {
-      this.element.classList.add('hidden');
-    }, 4000);
-  }
+  // 🦁 Créer une méthode `initPixels`
+  // * Cette méthode doit, pour chaque pixel du board, créer un pixel et l'ajouter au board
 }
 
 class Pixel {
@@ -63,83 +25,26 @@ class Pixel {
   static PIXEL_PICKER_CLASS = 'pixel-picker';
 
   constructor(color) {
-    this._color = color;
-    this.element = document.createElement('div');
-    this.element.classList.add(Pixel.PIXEL_CLASS);
-    this.element.style.background = color;
-  }
-
-  set color(newColor) {
-    this._color = newColor;
-    this.element.style.background = newColor;
-  }
-
-  get color() {
-    return this._color;
+    // 🦁 Stock la couleur dans _color
+    // 🦁 Créer un élément div qui sera stocké dans this.element
+    // * Définit la couleur du background de l'élément en `color`
+    // * Ajoute la classe `Pixel.PIXEL_CLASS` à l'élément
   }
 }
 
 class ColorPicker {
   constructor(colors, currentColor) {
-    this.colors = colors;
-    this.currentColor = currentColor;
-    this.element = document.querySelector('#color-picker');
-    this.timeLeft = document.querySelector('#time-left');
-    this.pixels = [];
-    this.interval = null;
+    // 🦁 Stock colors et currentColor
+    // 🦁 Initie un tableau de pixels
   }
 
-  initPixelPicker() {
-    for (const color of this.colors) {
-      const pixel = new Pixel(color);
-      this.pixels.push(pixel);
-      pixel.element.classList.add(Pixel.PIXEL_PICKER_CLASS);
-
-      if (color === this.currentColor) {
-        pixel.element.classList.add('active');
-      }
-
-      pixel.element.addEventListener('click', () => {
-        this.currentColor = color;
-        this.updateActiveColor();
-      });
-
-      this.element.append(pixel.element);
-    }
-  }
-
-  startCountdown(dateOfPixelClick) {
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-      const now = new Date();
-      const diff = now - dateOfPixelClick;
-      const seconds = Math.floor(diff / 1000);
-      this.timeLeft.innerText = `${5 - seconds}s`;
-
-      if (seconds >= Game.TIME_TO_WAIT / 1000) {
-        clearInterval(this.interval);
-        this.timeLeft.innerText = '';
-      }
-    }, 1000);
-  }
-
-  toggleTimeLeft(dateOfPixelClick) {
-    const timerWrapper = document.querySelector('#time-left');
-
-    timerWrapper.innerText = '5s';
-
-    this.startCountdown(dateOfPixelClick);
-  }
-
-  updateActiveColor() {
-    for (const pixel of this.pixels) {
-      if (pixel.color === this.currentColor) {
-        pixel.element.classList.add('active');
-      } else {
-        pixel.element.classList.remove('active');
-      }
-    }
-  }
+  // 🦁 Créer une méthode `init`
+  // * Cette méthode va récupérer l'élément avec l'id `color-picker`
+  // * Pour chaque couleur, elle va créer un pixel et l'ajouté à l'élément récupéré
+  // * Pour chaque pixel, ajoute la class `Pixel.PIXEL_PICKER_CLASS`
+  // * Si la couleur du pixel est égal à `currentColor`, ajoute la class `active`
+  // * Ajoute le pixel à element avec this.element.append
+  // * Stock le pixel dans le tableau de pixels
 }
 
 const game = new Game();
