@@ -63,7 +63,6 @@ class Game {
       return;
     }
 
-    pixel.color = this.colorPicker.currentColor;
     this.lastPixelAddedDate = new Date();
 
     this.toggleTimeLeft(this.lastPixelAddedDate);
