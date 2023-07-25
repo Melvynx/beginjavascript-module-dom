@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    // make all elements as any
+    "noImplicitAny": false
+    // disable checking of type of variable
+  },
+  "include": ["**/*.js"]
+}
