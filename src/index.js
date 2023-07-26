@@ -13,7 +13,7 @@ class Game {
     '#821f9f',
     '#fed734',
     '#f9fafc',
-    '#000000',
+    '#000000'
   ];
   static BOARD_SIZE = [25, 25];
   static PIXEL_SIZE = 20;
@@ -35,29 +35,37 @@ class Game {
     this.colorPicker.init();
     this.warning.init();
     this.pixels = [];
+    
+    this.pixelsCount = [];
+    this.updateCounts();
 
     this.socket = socket;
+    
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
+    
     this.socket.on('pixel change', (data) => {
-      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex)
-        this.pixelBeforeEdition = null;
+      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex) this.pixelBeforeEdition = null;
       this.updatePixel(data)
     });
+    
     this.socket.on('pong', (data) => {
       this.lastPixelAddedDate = new Date(data.date);
       this.toggleTimeLeft(this.lastPixelAddedDate)
+      
       if (!data.success) {
         this.updatePixel(this.pixelBeforeEdition);
         this.pixelBeforeEdition = null
         alert(data.message)
       }
     });
+    
     this.socket.on('connected', (data) => {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(data.live);
     });
+
     this.socket.on('disconnected', (data) => {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(connectedUsers.innerText) - 1;
@@ -66,6 +74,8 @@ class Game {
 
   updatePixel(data) {
     this.pixels[data.pixelIndex].color = data.color;
+    this.pixelsCount[data.color]++;
+    this.updateCounts();
   }
 
   initializeBoard(values) {
@@ -78,6 +88,17 @@ class Game {
       this.pixels.push(pixel);
       pixel.element.addEventListener('click', (e) => this.onPixelClick(pixel));
       this.board.append(pixel.element);
+    }
+  }
+
+  updateCounts() {
+    for (const color of Game.COLORS) {
+      const count = this.pixels.filter((pixel) => pixel.color === color).length;
+      this.pixelsCount[color] = count;
+
+      const countElement = document.querySelector(`#color-${color.replace('#', '')}`);
+      console.log({ countElement });
+      countElement.innerText = count;
     }
   }
 

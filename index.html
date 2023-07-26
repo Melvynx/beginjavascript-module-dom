@@ -14,10 +14,41 @@
         class="bg-red-200 border border-red-600 fixed top-4 left-4 px-1 py-0.5 rounded-md flex items-center gap-1"
       >
         <div class="h-2 w-2 animate-pulse rounded-full bg-red-600"></div>
-        <span> <span id="count">0</span> live </span>
+        <span>&nbsp;<span id="count">0</span> live&nbsp;</span>
       </div>
       <div class="flex flex-col items-center justify-center mt-4">
         <div id="board" class="shadow"></div>
+
+        <div class="flex gap-1 mt-2 gap-4">
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-red-500"></div>
+            <span id="color-ff4500">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-green-500"></div>
+            <span id="color-00cc78">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-blue-500"></div>
+            <span id="color-2450a5">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-purple-500"></div>
+            <span id="color-821f9f">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-yellow-500"></div>
+            <span id="color-fed734">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-white border border-dashed border-black"></div>
+            <span id="color-f9fafc">0</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <div class="h-4 w-4 rounded-full bg-black"></div>
+            <span id="color-000000">0</span>
+          </div>
+        </div>
 
         <div
           class="mt-2 p-1 border-yellow-100 border rounded bg-yellow-300/10 max-w-sm text-center"
@@ -46,51 +77,20 @@
     </div>
 
     <div class="fixed bottom-4 left-4 z-30">
-      <div id="message" class="shadow border-2 rounded-md hidden bg-white">
+      <div id="message" class="shadow border-2 rounded-md bg-white">
         <ul id="messages-list" class="overflow-auto max-h-32 p-2">
           <li class="">Start with a message.</li>
         </ul>
         <div class="flex gap-1 items-end p-2">
           <input
             id="message-input"
-            class="p-1 shadow rounded border border-slate-400 flex-1 h-8"
+            class="p-1 shadow rounded border border-slate-400 flex-1 h-8 focus:outline-none"
           />
-          <button
-            id="submit-message"
-            class="bg-indigo-600 rounded text-white px-2 h-8"
-          >
+          <button id="submit-message" class="bg-indigo-600 rounded text-white px-2 h-8">
             Submit
           </button>
         </div>
       </div>
-
-      <button
-        class="bg-white border border-slate-400 p-2 shadow-md rounded-md relative"
-        id="open-message-btn"
-      >
-        <span
-          id="unread-message-count"
-          class="absolute h-5 w-5 bg-red-500 rounded-full -right-3 -top-3 text-white text-xs flex itmes-center justify-center pt-0.5"
-        >
-          0
-        </span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-message-square-plus"
-        >
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          <line x1="9" x2="15" y1="10" y2="10" />
-          <line x1="12" x2="12" y1="7" y2="13" />
-        </svg>
-      </button>
     </div>
     <script type="module" src="/src/index.js"></script>
   </body>
