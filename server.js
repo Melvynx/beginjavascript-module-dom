@@ -77,8 +77,11 @@ io.on('connection', (socket) => {
         ip: clientIp,
         userAgent: clientUserAgent,
       });
-      io.emit('pixel change', data);
-      socket.emit('pong', { success: true, message: 'Pixel changed', date: new Date() });
+      // send to everyone except the user
+      socket.broadcast.emit('pixel change', data);
+
+      // send socket only to the user
+      socket.emit('pong', { success: true, message: 'Pixel changed', date: new Date(), pixel: data });
     } else {
       // send socket only to the user
       socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });

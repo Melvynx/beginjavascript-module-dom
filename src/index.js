@@ -43,7 +43,9 @@ class Game {
     this.socket.on('pong', (data) => {
       this.lastPixelAddedDate = new Date(data.date);
       this.toggleTimeLeft(this.lastPixelAddedDate)
-      if (!data.success) {
+      if (data.success) {
+        this.updatePixel(data.pixel);
+      } else {
         alert(data.message)
       }
     });
