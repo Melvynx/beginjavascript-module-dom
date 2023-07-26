@@ -321,7 +321,7 @@ class Message {
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
 
-      const audio = new Audio('/public/sounds/message.mp3');
+      const audio = new Audio('public/sounds/message.mp3');
       audio.play();
     });
 
@@ -331,9 +331,10 @@ class Message {
 
     const checkIfCommand = (message) => {
       if (message.startsWith('/username')) {
-        const newUsername = message.split(' ')[1];
+        const newUsername = message.split(' ')[1].substring(0, 16);
         if (newUsername) {
           this.username.innerText = newUsername;
+
           localStorage.setItem('username', newUsername);
 
           this.sendMessage(`${game.username} was renamed to ${newUsername}`);
