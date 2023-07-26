@@ -12,7 +12,7 @@ class Game {
   ];
   static BOARD_SIZE = [25, 25];
   static PIXEL_SIZE = 20;
-  static TIME_TO_WAIT = 5000;
+  static TIME_TO_WAIT = 3000;
 
   lastPixelAddedDate = null;
 
@@ -88,7 +88,7 @@ class Game {
   }
 
   toggleTimeLeft() {
-    this.timeLeft.innerText = '5s';
+    this.timeLeft.innerText = `${Game.TIME_TO_WAIT / 1000}s`;
     this.startCountdown();
   }
 }

@@ -63,7 +63,7 @@ httpServer.listen(port, () => {
 
 function canUserClick(ip, socketId) {
   const lastClickDate = userClickData.get(ip + socketId);
-  if (lastClickDate && new Date() - lastClickDate < 5000) {
+  if (lastClickDate && new Date() - lastClickDate < 3000) {
     return false;
   }
   return true;
