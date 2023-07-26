@@ -7,9 +7,9 @@ const fastify = Fastify();
 
 const corsParam = {
   cors: {
-    origin: 'https://rplacejs.vercel.app/', // dev origin: 'http://localhost:5173',
+    origin: '*',
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: '*',
     credentials: true,
   },
 };
@@ -55,6 +55,8 @@ io.on('connection', (socket) => {
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
+      // To keep trace of pixels
+      console.log(data);
       board[data.pixelIndex] = data.color;
       userClickData.delete(socketId);
       userClickData.set(socketId, {
