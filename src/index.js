@@ -42,6 +42,9 @@ class Game {
   }
 
   initializeBoard(values) {
+    while (this.board.firstChild) {
+      this.board.removeChild(this.board.firstChild);
+    }
     for (let i = 0; i < values.length; i++) {
       const currentValue = values[i];
       const pixel = new Pixel(currentValue, i);

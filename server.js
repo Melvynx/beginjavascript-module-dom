@@ -24,7 +24,7 @@ const io = new Server(httpServer, {
 });
 
 // empty board with 625 pixels of white color
-let board = new Array(625).fill('#ff4500');
+let board = new Array(625).fill('#fed834');
 
 let userClickData = new Map();
 
