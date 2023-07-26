@@ -56,16 +56,19 @@ io.on('connection', (socket) => {
 
   socket.on('pixel change', (data) => {
     if (!ALLOWED_COLORS.includes(data.color)) {
+      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
       return;
     }
 
     const clientUserAgent = socket.handshake.headers['user-agent']?.trim();
     if (!clientUserAgent) {
+      socket.emit('pong', { success: false, message: 'Un problème du à votre navigateur est survenue', date: new Date() });
       return;
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
       if (data.pixelIndex > BOARD.length - 1) {
+        socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
         return;
       }
       console.log(data);
@@ -76,8 +79,14 @@ io.on('connection', (socket) => {
         ip: clientIp,
         userAgent: clientUserAgent,
       });
-      io.emit('pixel change', data);
+      // send to everyone except the user
+      socket.broadcast.emit('pixel change', data);
+
+      // send socket only to the user
+      socket.emit('pong', { success: true, message: 'Pixel changed', date: new Date(), pixel: data });
     } else {
+      // send socket only to the user
+      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
       console.log('user not allowed to click');
     }
   });

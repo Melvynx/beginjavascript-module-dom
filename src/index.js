@@ -40,6 +40,15 @@ class Game {
       this.initializeBoard(initialBoardState)
     );
     this.socket.on('pixel change', (data) => this.updatePixel(data));
+    this.socket.on('pong', (data) => {
+      this.lastPixelAddedDate = new Date(data.date);
+      this.toggleTimeLeft(this.lastPixelAddedDate)
+      if (data.success) {
+        this.updatePixel(data.pixel);
+      } else {
+        alert(data.message)
+      }
+    });
   }
 
   updatePixel(data) {
@@ -67,10 +76,6 @@ class Game {
       this.warning.showWarning();
       return;
     }
-
-    this.lastPixelAddedDate = new Date();
-
-    this.toggleTimeLeft(this.lastPixelAddedDate);
 
     this.socket.emit('pixel change', {
       pixelIndex: pixel.index,
