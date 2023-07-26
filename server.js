@@ -93,7 +93,8 @@ function canUserClick(ip, socketId, userAgent) {
   // check if a userclickdata have the same ip but not the same socketId
   for (const [key, value] of userClickData.entries()) {
     if (key !== socketId && value.ip === ip) {
-      if (value.date && new Date() - value.date < 3000) {
+      // Check if the user click is less than 2.5 seconds
+      if (value.date && new Date() - value.date < 2500) {
         return false;
       }
     }
