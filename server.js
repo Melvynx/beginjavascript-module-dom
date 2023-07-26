@@ -6,10 +6,12 @@ import { Server } from 'socket.io';
 const fastify = Fastify();
 
 const corsParam = {
-  origin: 'https://rplacejs.vercel.app/', // dev origin: 'http://localhost:5173',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  cors: {
+    origin: 'https://rplacejs.vercel.app/', // dev origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  },
 };
 
 await fastify.register(cors, corsParam);
@@ -23,7 +25,7 @@ const httpServer = createServer(fastify);
 const io = new Server(httpServer, corsParam);
 
 // empty board with 625 pixels of white color
-let board = new Array(625).fill('#fed734');
+const board = new Array(625).fill('#fed734');
 const allowedColors = [
   '#ff4500',
   '#00cc78',
