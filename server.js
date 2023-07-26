@@ -16,11 +16,6 @@ const corsParam = {
 
 await fastify.register(cors, corsParam);
 
-// test a hello world on /
-fastify.get('/', async (req, res) => {
-  return 'hello world';
-});
-
 const httpServer = createServer(fastify);
 const io = new Server(httpServer, corsParam);
 
@@ -38,11 +33,16 @@ const ALLOWED_COLORS = [
 ];
 
 let userClickData = new Map();
+let connectedUsers = 0;
 
 io.on('connection', (socket) => {
   const clientIp = getIp(socket);
   const socketId = socket.id;
+  connectedUsers++;
 
+  io.emit('connected', {
+    live: connectedUsers
+  });
   socket.emit('init', BOARD);
 
   socket.on('message', (data) => {
@@ -93,6 +93,8 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     userClickData.delete(socketId);
+    connectedUsers--;
+    io.emit('disconnected');
     console.log(socketId + ' disconnected');
   });
 });
