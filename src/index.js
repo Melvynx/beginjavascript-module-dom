@@ -1,7 +1,15 @@
 import { io } from 'socket.io-client';
 
 class Game {
-  static COLORS = ['#ff4500', '#00cc78', '#2450a5', '#fed734', '#f9fafc'];
+  static COLORS = [
+    '#ff4500',
+    '#00cc78',
+    '#2450a5',
+    '#821f9f',
+    '#fed734',
+    '#f9fafc',
+    '#000000',
+  ];
   static BOARD_SIZE = [25, 25];
   static PIXEL_SIZE = 20;
   static TIME_TO_WAIT = 5000;
