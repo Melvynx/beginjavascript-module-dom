@@ -1,5 +1,7 @@
 import { io } from 'socket.io-client';
 
+const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+
 class Game {
   static COLORS = [
     '#ff4500',
@@ -30,7 +32,7 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
-    this.socket = io('https://beginjavascript-module-dom-production.up.railway.app');
+    this.socket = io(wsUrl);
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
