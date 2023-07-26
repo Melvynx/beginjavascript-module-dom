@@ -55,7 +55,9 @@ io.on('connection', (socket) => {
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
-      // To keep trace of pixels
+      if (data.pixelIndex > board.length) {
+        return;
+      }
       console.log(data);
       board[data.pixelIndex] = data.color;
       userClickData.delete(socketId);
