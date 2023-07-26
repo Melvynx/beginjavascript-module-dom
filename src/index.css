@@ -33,3 +33,11 @@
 #board {
   display: grid;
 }
+
+#messages-list > li {
+  @apply max-w-sm odd:bg-slate-200;
+}
+
+#messages-list {
+  width: 300px;
+}

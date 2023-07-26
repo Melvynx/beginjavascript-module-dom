@@ -25,8 +25,9 @@ const httpServer = createServer(fastify);
 const io = new Server(httpServer, corsParam);
 
 // empty board with 625 pixels of white color
-const board = new Array(625).fill('#fed734');
-const allowedColors = [
+const TIME_TO_WAIT = 2500;
+const BOARD = new Array(625).fill('#fed734');
+const ALLOWED_COLORS = [
   '#ff4500',
   '#00cc78',
   '#2450a5',
@@ -35,7 +36,6 @@ const allowedColors = [
   '#f9fafc',
   '#000000',
 ];
-const timer = 2500;
 
 let userClickData = new Map();
 
@@ -43,24 +43,34 @@ io.on('connection', (socket) => {
   const clientIp = getIp(socket);
   const socketId = socket.id;
 
-  socket.emit('init', board);
+  socket.emit('init', BOARD);
+
+  socket.on('message', (data) => {
+    // take only first 100 characters
+    const message = String(data.message).substring(0, 100);
+
+    io.emit('message', {
+      message,
+    });
+  });
 
   socket.on('pixel change', (data) => {
-    if (!allowedColors.includes(data.color)) {
+    if (!ALLOWED_COLORS.includes(data.color)) {
       return;
     }
 
     const clientUserAgent = socket.handshake.headers['user-agent']?.trim();
     if (!clientUserAgent) {
+      socket.emit('pong', { success: false, message: 'Un problème du à votre navigateur est survenue', date: new Date() });
       return;
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
-      if (data.pixelIndex > board.length - 1) {
+      if (data.pixelIndex > BOARD.length - 1) {
         return;
       }
       console.log(data);
-      board[data.pixelIndex] = data.color;
+      BOARD[data.pixelIndex] = data.color;
       userClickData.delete(socketId);
       userClickData.set(socketId, {
         date: new Date(),
@@ -98,7 +108,7 @@ function canUserClick(ip, socketId, userAgent) {
   for (const [key, value] of userClickData.entries()) {
     if (key !== socketId && value.ip === ip) {
       // Check if the user click is less than 2.5 seconds
-      if (value.date && new Date() - value.date < timer) {
+      if (value.date && new Date() - value.date < TIME_TO_WAIT) {
         return false;
       }
     }
@@ -109,7 +119,7 @@ function canUserClick(ip, socketId, userAgent) {
 
   if (mapData && (mapData.ip !== ip || mapData.userAgent !== userAgent)) {
     return false;
-  } else if (mapData.date && new Date() - mapData.date < timer) {
+  } else if (mapData.date && new Date() - mapData.date < TIME_TO_WAIT) {
     return false;
   }
 
