@@ -109,11 +109,20 @@
       </div>
 
       <ul id="messages-list" class="overflow-auto h-52 p-2">
-        <li class="">Welcome to the r/placejs chat, please be cool with others participants.</li>
+        <li class="">
+          Welcome to the r/placejs chat, please be cool with others participants, your username is <span id="username" class="font-bold"></span>.
+          <br>You can re-generate your username by clicking on this button:
+          <button id="regenerate-username" class="text-blue-500 hover:underline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          </button>, or you can type a custom username with <kbd class="bg-gray-200">/username your-username</kbd>
+        </li>
       </ul>
 
       <div class="flex top-0 items-end px-2 gap-1">
-        <input id="message-input" class="p-1 shadow rounded border border-slate-400 flex-1 h-8" />
+        <div class="flex p-1 shadow rounded border bg-transparent border-slate-400 flex-1 h-8">
+          <input id="message-input" class="w-full bg-transparent outline-none" maxlength="100" />
+          <span id="message-length" class="px-1.5 text-gray-500">0/100</span>
+        </div>
         <button id="submit-message" class="bg-indigo-600 rounded text-white px-2 h-8">
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
         </button>

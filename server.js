@@ -58,6 +58,7 @@ io.on('connection', (socket) => {
   io.emit('connected', {
     live: connectedUsers
   });
+  
   socket.emit('init', BOARD);
 
   socket.on('message', (data) => {

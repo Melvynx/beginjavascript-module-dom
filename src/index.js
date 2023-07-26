@@ -29,13 +29,31 @@ class Game {
     this.interval = null;
   }
 
-  init() {
+  async init() {
     this.board = document.querySelector('#board');
     this.timeLeft = document.querySelector('#time-left');
     this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
     this.colorPicker.init();
     this.warning.init();
     this.pixels = [];
+
+    this.username = "loading";
+
+    const usernameElement = document.querySelector('#username');
+
+    const username = await fetch('https://randomuser.me/api/')
+      .then((res) => res.json())
+      .then((data) => data.results[0].login.username)
+      .catch(() => 'user' + Math.floor(Math.random() * 1000));
+
+    const localUsername = localStorage.getItem('username');
+    console.log({ localUsername });
+    if (!localUsername) {
+      this.username = username;
+      localStorage.setItem('username', this.username);
+    } this.username = localStorage.getItem('username');
+
+    usernameElement.innerText = this.username;
     
     this.pixelsCount = []
     this.updateCounts();
@@ -273,7 +291,7 @@ class Message {
   }
 
   set unreadMessage(newUnreadMessage) {
-    this._unreadMessage = newUnreadMessage > 9 ? 9 : newUnreadMessage;
+    this._unreadMessage = newUnreadMessage > 9 ? "9+" : newUnreadMessage;
 
     if (this._unreadMessage === 0) {
       this.unreadMessageElement.classList.add('hidden');
@@ -306,17 +324,36 @@ class Message {
 
     this.submitButton = document.querySelector('#submit-message');
     this.input = document.querySelector('#message-input');
+    this.username = document.querySelector('#username');
+
+    const checkIfCommand = (message) => {
+      if (message.startsWith('/username')) {
+        const newUsername = message.split(' ')[1];
+        if (newUsername) {
+          this.username.innerText = newUsername;
+          localStorage.setItem('username', newUsername);
+
+          this.sendMessage(`${game.username} was renamed to ${newUsername}`);
+        }
+      }
+    };
 
     this.submitButton.addEventListener('click', () => {
-      const message = this.input.value;
-      this.sendMessage(message);
+      if (this.input.value.startsWith('/')) return checkIfCommand(this.input.value);
+
+      if (this.input.value.length === 0) return;
+      const message = game.username + ': ' + this.input.value;
+      this.sendMessage(message, this._identifier);
       this.input.value = '';
     });
-    
+
     this.input.addEventListener('keyup', (e) => {
+      if (this.input.value.startsWith('/')) return checkIfCommand(this.input.value);
+      
       if (e.key === 'Enter') {
-        const message = this.input.value;
-        this.sendMessage(message);
+        if (this.input.value.length === 0) return;
+        const message = game.username + ': ' + this.input.value;
+        this.sendMessage(message, this._identifier);
         this.input.value = '';
       }
     });
@@ -333,7 +370,7 @@ class Message {
 
   sendMessage(message) {
     this.socket.emit('message', {
-      message,
+      message
     });
   }
 
