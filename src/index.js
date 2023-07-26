@@ -1,6 +1,9 @@
 import { io } from 'socket.io-client';
 
-const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+// const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+const wsUrl = 'http://localhost:3044';
+
+const socket = io(wsUrl);
 
 class Game {
   static COLORS = [
@@ -32,7 +35,7 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
-    this.socket = io(wsUrl);
+    this.socket = socket;
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
@@ -182,5 +185,63 @@ class ColorPicker {
   }
 }
 
+class Message {
+  constructor() {}
+
+  init() {
+    this.element = document.querySelector('#message');
+    this.messageList = document.querySelector('#messages-list');
+    this.socket = socket;
+
+    this.socket.on('message', (data) => {
+      this.addMessage(data.message);
+    });
+
+    this.submitButton = document.querySelector('#submit-message');
+    this.input = document.querySelector('#message-input');
+
+    this.submitButton.addEventListener('click', () => {
+      const message = this.input.value;
+      this.sendMessage(message);
+      this.input.value = '';
+    });
+    this.input.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') {
+        const message = this.input.value;
+        this.sendMessage(message);
+        this.input.value = '';
+      }
+    });
+
+    this.openMessageButton = document.querySelector('#open-message-btn');
+
+    this.openMessageButton.addEventListener('click', () => {
+      this.element.classList.toggle('hidden');
+    });
+  }
+
+  sendMessage(message) {
+    this.socket.emit('message', {
+      message,
+    });
+    // scroll to bottom of message list when new message is added
+    this.messageList.scrollTop = this.messageList.scrollHeight;
+  }
+
+  addMessage(message) {
+    console.log('this', this);
+    console.log('Add message');
+    const messageElement = document.createElement('li');
+    messageElement.innerText = message;
+    const firstChild = this.element.firstChild;
+    console.log({ firstChild });
+    // this.element.firstChild.append(messageElement);
+    this.messageList.append(messageElement);
+  }
+}
+
 const game = new Game();
 game.init();
+
+const message = new Message();
+message.init();

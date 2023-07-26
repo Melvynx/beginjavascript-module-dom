@@ -25,8 +25,9 @@ const httpServer = createServer(fastify);
 const io = new Server(httpServer, corsParam);
 
 // empty board with 625 pixels of white color
-const board = new Array(625).fill('#fed734');
-const allowedColors = [
+const TIME_TO_WAIT = 2500;
+const BOARD = new Array(625).fill('#fed734');
+const ALLOWED_COLORS = [
   '#ff4500',
   '#00cc78',
   '#2450a5',
@@ -42,10 +43,18 @@ io.on('connection', (socket) => {
   const clientIp = getIp(socket);
   const socketId = socket.id;
 
-  socket.emit('init', board);
+  socket.emit('init', BOARD);
+
+  socket.on('message', (data) => {
+    const message = data.message;
+
+    socket.emit('message', {
+      message,
+    });
+  });
 
   socket.on('pixel change', (data) => {
-    if (!allowedColors.includes(data.color)) {
+    if (!ALLOWED_COLORS.includes(data.color)) {
       return;
     }
 
@@ -55,11 +64,11 @@ io.on('connection', (socket) => {
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
-      if (data.pixelIndex > board.length - 1) {
+      if (data.pixelIndex > BOARD.length - 1) {
         return;
       }
       console.log(data);
-      board[data.pixelIndex] = data.color;
+      BOARD[data.pixelIndex] = data.color;
       userClickData.delete(socketId);
       userClickData.set(socketId, {
         date: new Date(),
@@ -94,7 +103,7 @@ function canUserClick(ip, socketId, userAgent) {
   for (const [key, value] of userClickData.entries()) {
     if (key !== socketId && value.ip === ip) {
       // Check if the user click is less than 2.5 seconds
-      if (value.date && new Date() - value.date < 2500) {
+      if (value.date && new Date() - value.date < TIME_TO_WAIT) {
         return false;
       }
     }
@@ -105,7 +114,7 @@ function canUserClick(ip, socketId, userAgent) {
 
   if (mapData && (mapData.ip !== ip || mapData.userAgent !== userAgent)) {
     return false;
-  } else if (mapData.date && new Date() - mapData.date < 5000) {
+  } else if (mapData.date && new Date() - mapData.date < TIME_TO_WAIT) {
     return false;
   }
 
