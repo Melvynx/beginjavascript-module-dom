@@ -16,11 +16,6 @@ const corsParam = {
 
 await fastify.register(cors, corsParam);
 
-// test a hello world on /
-fastify.get('/', async (req, res) => {
-  return 'hello world';
-});
-
 const httpServer = createServer(fastify);
 const io = new Server(httpServer, corsParam);
 
@@ -56,6 +51,7 @@ io.on('connection', (socket) => {
 
   socket.on('pixel change', (data) => {
     if (!ALLOWED_COLORS.includes(data.color)) {
+      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
       return;
     }
 
@@ -67,6 +63,7 @@ io.on('connection', (socket) => {
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
       if (data.pixelIndex > BOARD.length - 1) {
+        socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
         return;
       }
       console.log(data);

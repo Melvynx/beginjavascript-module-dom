@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
-const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
-// const wsUrl = 'http://localhost:3044';
+// const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+const wsUrl = 'http://localhost:3044';
 
 const socket = io(wsUrl);
 
@@ -20,6 +20,7 @@ class Game {
   static TIME_TO_WAIT = 3000;
 
   lastPixelAddedDate = null;
+  pixelBeforeEdition = null;
 
   constructor() {
     this.warning = new Warning();
@@ -43,9 +44,8 @@ class Game {
     this.socket.on('pong', (data) => {
       this.lastPixelAddedDate = new Date(data.date);
       this.toggleTimeLeft(this.lastPixelAddedDate)
-      if (data.success) {
-        this.updatePixel(data.pixel);
-      } else {
+      if (!data.success) {
+        this.updatePixel(this.pixelBeforeEdition);
         alert(data.message)
       }
     });
@@ -77,10 +77,17 @@ class Game {
       return;
     }
 
-    this.socket.emit('pixel change', {
+    const pixelData = {
       pixelIndex: pixel.index,
       color: this.colorPicker.currentColor,
-    });
+    }
+
+    this.pixelBeforeEdition = {
+      pixelIndex: pixel.index,
+      color: pixel.color,
+    };
+    this.updatePixel(pixelData)
+    this.socket.emit('pixel change', pixelData);
   }
 
   startCountdown() {
