@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { EmojiParser } from './emoji-parser';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 //  const wsUrl = 'http://localhost:3044';
@@ -321,7 +322,7 @@ class Message {
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
 
-      const audio = new Audio('../public/sounds/message.mp3');
+      const audio = new Audio('/sounds/message.mp3');
       audio.play();
     });
 
