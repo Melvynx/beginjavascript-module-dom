@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
-// const wsUrl = 'http://localhost:3044';
+//  const wsUrl = 'http://localhost:3044';
 
 const socket = io(wsUrl);
 
