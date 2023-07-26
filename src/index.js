@@ -80,7 +80,7 @@ class Game {
       const now = new Date();
       const diff = now - this.lastPixelAddedDate;
       const seconds = Math.floor(diff / 1000);
-      this.timeLeft.innerText = `${5 - seconds}s`;
+      this.timeLeft.innerText = `${Game.TIME_TO_WAIT / 1000 - seconds}s`;
 
       if (seconds >= Game.TIME_TO_WAIT / 1000) {
         clearInterval(this.interval);
