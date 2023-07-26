@@ -49,6 +49,7 @@ io.on('connection', (socket) => {
       return;
     }
     if (canUserClick(clientIp, socketId)) {
+      console.log(data);
       board[data.pixelIndex] = data.color;
       userClickData.set(clientIp + socketId, new Date());
       io.emit('pixel change', data);

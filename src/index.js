@@ -71,7 +71,6 @@ class Game {
     this.socket.emit('pixel change', {
       pixelIndex: pixel.index,
       color: this.colorPicker.currentColor,
-      userAgent: navigator.userAgent,
     });
   }
 
