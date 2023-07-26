@@ -198,11 +198,43 @@ class ColorPicker {
 }
 
 class Message {
-  constructor() {}
+  constructor() {
+    this._unreadMessage = 0;
+  }
+
+  get unreadMessage() {
+    return this._unreadMessage;
+  }
+
+  set unreadMessage(newUnreadMessage) {
+    this._unreadMessage = newUnreadMessage > 9 ? 9 : newUnreadMessage;
+
+    if (this._unreadMessage === 0) {
+      this.unreadMessageElement.classList.add('hidden');
+    } else {
+      this.unreadMessageElement.classList.remove('hidden');
+      this.unreadMessageElement.innerText = this._unreadMessage;
+    }
+  }
+
+  get open() {
+    // check if message element has class hidden
+    return !this.element.classList.contains('hidden');
+  }
+
+  set open(newOpen) {
+    // if newOpen is true, remove class hidden from message element
+    if (newOpen) {
+      this.element.classList.remove('hidden');
+    } else {
+      this.element.classList.add('hidden');
+    }
+  }
 
   init() {
     this.element = document.querySelector('#message');
     this.messageList = document.querySelector('#messages-list');
+    this.unreadMessageElement = document.querySelector('#unread-message-count');
     this.socket = socket;
 
     this.socket.on('message', (data) => {
@@ -228,7 +260,10 @@ class Message {
     this.openMessageButton = document.querySelector('#open-message-btn');
 
     this.openMessageButton.addEventListener('click', () => {
-      this.element.classList.toggle('hidden');
+      this.open = !this.open;
+      if (this.open) {
+        this.unreadMessage = 0;
+      }
     });
   }
 
@@ -236,8 +271,6 @@ class Message {
     this.socket.emit('message', {
       message,
     });
-    // scroll to bottom of message list when new message is added
-    this.messageList.scrollTop = this.messageList.scrollHeight;
   }
 
   addMessage(message) {
@@ -249,6 +282,15 @@ class Message {
     console.log({ firstChild });
     // this.element.firstChild.append(messageElement);
     this.messageList.append(messageElement);
+
+    if (!this.open) {
+      this.unreadMessage++;
+    }
+
+    // scroll to bottom of message list when new message is added
+    setTimeout(() => {
+      this.messageList.scrollTop = this.messageList.scrollHeight;
+    }, 5);
   }
 }
 
