@@ -36,16 +36,6 @@ const allowedColors = [
 
 let userClickData = new Map();
 
-const COLORS = [
-  '#ff4500',
-  '#00cc78',
-  '#2450a5',
-  '#821f9f',
-  '#fed734',
-  '#f9fafc',
-  '#000000',
-];
-
 io.on('connection', (socket) => {
   const clientIp = getIp(socket);
   const socketId = socket.id;
