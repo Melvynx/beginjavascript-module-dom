@@ -33,12 +33,16 @@ const ALLOWED_COLORS = [
 ];
 
 let userClickData = new Map();
+let connectedUsers = 0;
 
 io.on('connection', (socket) => {
   const clientIp = getIp(socket);
   const socketId = socket.id;
+  connectedUsers++;
 
-  io.emit('connected');
+  io.emit('connected', {
+    live: connectedUsers
+  });
   socket.emit('init', BOARD);
 
   socket.on('message', (data) => {
@@ -89,6 +93,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     userClickData.delete(socketId);
+    connectedUsers--;
     io.emit('disconnected');
     console.log(socketId + ' disconnected');
   });

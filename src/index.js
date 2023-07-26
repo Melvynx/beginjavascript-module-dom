@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 
-const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
-// const wsUrl = 'http://localhost:3044';
+// const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
+const wsUrl = 'http://localhost:3044';
 
 const socket = io(wsUrl);
 
@@ -56,7 +56,7 @@ class Game {
     });
     this.socket.on('connected', (data) => {
       const connectedUsers = document.querySelector('#count');
-      connectedUsers.innerText = Number(connectedUsers.innerText) + 1;
+      connectedUsers.innerText = Number(data.live);
     });
     this.socket.on('disconnected', (data) => {
       const connectedUsers = document.querySelector('#count');
