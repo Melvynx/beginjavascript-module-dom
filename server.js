@@ -35,6 +35,7 @@ const allowedColors = [
   '#f9fafc',
   '#000000',
 ];
+const timer = 2500;
 
 let userClickData = new Map();
 
@@ -67,7 +68,10 @@ io.on('connection', (socket) => {
         userAgent: clientUserAgent,
       });
       io.emit('pixel change', data);
+      socket.emit('pong', { success: true, message: 'Pixel changed', date: new Date() });
     } else {
+      // send socket only to the user
+      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
       console.log('user not allowed to click');
     }
   });
@@ -94,7 +98,7 @@ function canUserClick(ip, socketId, userAgent) {
   for (const [key, value] of userClickData.entries()) {
     if (key !== socketId && value.ip === ip) {
       // Check if the user click is less than 2.5 seconds
-      if (value.date && new Date() - value.date < 2500) {
+      if (value.date && new Date() - value.date < timer) {
         return false;
       }
     }
@@ -105,7 +109,7 @@ function canUserClick(ip, socketId, userAgent) {
 
   if (mapData && (mapData.ip !== ip || mapData.userAgent !== userAgent)) {
     return false;
-  } else if (mapData.date && new Date() - mapData.date < 5000) {
+  } else if (mapData.date && new Date() - mapData.date < timer) {
     return false;
   }
 
