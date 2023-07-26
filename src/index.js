@@ -54,6 +54,14 @@ class Game {
         alert(data.message)
       }
     });
+    this.socket.on('connected', (data) => {
+      const connectedUsers = document.querySelector('#count');
+      connectedUsers.innerText = Number(connectedUsers.innerText) + 1;
+    });
+    this.socket.on('disconnected', (data) => {
+      const connectedUsers = document.querySelector('#count');
+      connectedUsers.innerText = Number(connectedUsers.innerText) - 1;
+    });
   }
 
   updatePixel(data) {
