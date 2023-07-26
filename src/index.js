@@ -320,6 +320,9 @@ class Message {
 
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
+
+      const audio = new Audio('/public/sounds/message.mp3');
+      audio.play();
     });
 
     this.submitButton = document.querySelector('#submit-message');
@@ -339,18 +342,16 @@ class Message {
     };
 
     this.submitButton.addEventListener('click', () => {
-      if (this.input.value.startsWith('/')) return checkIfCommand(this.input.value);
-
       if (this.input.value.length === 0) return;
+      if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
       const message = game.username + ': ' + this.input.value;
       this.sendMessage(message, this._identifier);
       this.input.value = '';
     });
 
     this.input.addEventListener('keyup', (e) => {
-      if (this.input.value.startsWith('/')) return checkIfCommand(this.input.value);
-      
       if (e.key === 'Enter') {
+        if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
         if (this.input.value.length === 0) return;
         const message = game.username + ': ' + this.input.value;
         this.sendMessage(message, this._identifier);
