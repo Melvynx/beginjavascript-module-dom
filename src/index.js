@@ -321,7 +321,7 @@ class Message {
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
 
-      const audio = new Audio('public/sounds/message.mp3');
+      const audio = new Audio('../public/sounds/message.mp3');
       audio.play();
     });
 
