@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
 
   socket.on('message', (data) => {
     // take only first 100 characters
-    const message = data.message.substring(0, 100);
+    const message = String(data.message).substring(0, 100);
 
     socket.emit('message', {
       message,
