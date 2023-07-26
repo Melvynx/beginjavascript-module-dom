@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     }
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
-      if (data.pixelIndex > board.length) {
+      if (data.pixelIndex > board.length - 1) {
         return;
       }
       console.log(data);
