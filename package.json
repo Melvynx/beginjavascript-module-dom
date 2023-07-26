@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
-    "discord-emojis-parser": "^1.0.4",
+    "emoji-js": "^3.7.0",
     "fastify": "^4.20.0",
     "i": "^0.3.7",
     "npm": "^9.8.1",

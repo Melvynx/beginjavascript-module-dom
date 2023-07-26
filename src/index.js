@@ -336,7 +336,6 @@ class Message {
           this.username.innerText = newUsername;
 
           localStorage.setItem('username', newUsername);
-
           this.sendMessage(`${game.username} was renamed to ${newUsername}`);
         }
       }
@@ -380,6 +379,23 @@ class Message {
     console.log('this', this);
     console.log('Add message');
     const messageElement = document.createElement('li');
+
+    // if message include a link, add target blank to open link in new tab
+    if (message.includes('http')) {
+      messageElement.innerHTML = message.replace(
+        /http(s)?:\/\/(.*?)\s/g,
+        (match) => `<a href="${match}" target="_blank">${match}</a> `
+      );
+    }
+
+    // if include an gif, add img tag
+    if (message.includes('.gif')) {
+      messageElement.innerHTML = message.replace(
+        /(.*?)\.(gif)/g,
+        (match) => `<img src="${match}" />`
+      );
+    }
+
     messageElement.innerText = message;
     const firstChild = this.element.firstChild;
     console.log({ firstChild });
