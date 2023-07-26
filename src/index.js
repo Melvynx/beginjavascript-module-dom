@@ -15,6 +15,7 @@ class Game {
     '#f9fafc',
     '#000000'
   ];
+
   static BOARD_SIZE = [25, 25];
   static PIXEL_SIZE = 20;
   static TIME_TO_WAIT = 3000;
@@ -36,7 +37,7 @@ class Game {
     this.warning.init();
     this.pixels = [];
     
-    this.pixelsCount = [];
+    this.pixelsCount = []
     this.updateCounts();
 
     this.socket = socket;
@@ -70,6 +71,24 @@ class Game {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(connectedUsers.innerText) - 1;
     });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
+        const nextColorIndex = currentColorIndex + 1 >= Game.COLORS.length ? 0 : currentColorIndex + 1;
+        this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
+        this.colorPicker.updateActiveColor();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
+        const nextColorIndex = currentColorIndex - 1 < 0 ? Game.COLORS.length - 1 : currentColorIndex - 1;
+        this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
+        this.colorPicker.updateActiveColor();
+      }
+    });
   }
 
   updatePixel(data) {
@@ -87,6 +106,18 @@ class Game {
       const pixel = new Pixel(currentValue, i);
       this.pixels.push(pixel);
       pixel.element.addEventListener('click', (e) => this.onPixelClick(pixel));
+      pixel.element.addEventListener('mouseover', (e) => {
+        const position = document.querySelector('#position');
+        const x = i % Game.BOARD_SIZE[0];
+        const y = Math.floor(i / Game.BOARD_SIZE[0]);
+        position.innerText = `x: ${x}, y: ${y}`;
+      });
+
+      pixel.element.addEventListener('mouseleave', (e) => {
+        const position = document.querySelector('#position');
+        position.innerText = 'x: 0, y: 0';
+      });
+
       this.board.append(pixel.element);
     }
   }
@@ -97,7 +128,6 @@ class Game {
       this.pixelsCount[color] = count;
 
       const countElement = document.querySelector(`#color-${color.replace('#', '')}`);
-      console.log({ countElement });
       countElement.innerText = count;
     }
   }
@@ -135,11 +165,13 @@ class Game {
       if (seconds >= Game.TIME_TO_WAIT / 1000) {
         clearInterval(this.interval);
         this.timeLeft.innerText = '';
+        this.timeLeft.classList.add('hidden');
       }
     }, 1000);
   }
 
   toggleTimeLeft() {
+    this.timeLeft.classList.remove('hidden');
     this.timeLeft.innerText = `${Game.TIME_TO_WAIT / 1000}s`;
     this.startCountdown();
   }
@@ -258,11 +290,8 @@ class Message {
 
   set open(newOpen) {
     // if newOpen is true, remove class hidden from message element
-    if (newOpen) {
-      this.element.classList.remove('hidden');
-    } else {
-      this.element.classList.add('hidden');
-    }
+    if (newOpen) this.element.classList.remove('hidden');
+    else this.element.classList.add('hidden');
   }
 
   init() {
@@ -283,6 +312,7 @@ class Message {
       this.sendMessage(message);
       this.input.value = '';
     });
+    
     this.input.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
         const message = this.input.value;
@@ -291,7 +321,7 @@ class Message {
       }
     });
 
-    this.openMessageButton = document.querySelector('#open-message-btn');
+    this.openMessageButton = document.querySelector('#toggle-message-btn');
 
     this.openMessageButton.addEventListener('click', () => {
       this.open = !this.open;

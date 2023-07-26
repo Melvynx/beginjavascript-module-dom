@@ -35,9 +35,9 @@
 }
 
 #messages-list > li {
-  @apply max-w-sm odd:bg-slate-200;
+  @apply max-w-full p-1.5 hover:bg-blue-100;
 }
 
 #messages-list {
-  width: 300px;
+  width: 450px;
 }
