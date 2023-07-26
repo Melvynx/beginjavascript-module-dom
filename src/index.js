@@ -1,5 +1,4 @@
 import { io } from 'socket.io-client';
-import { EmojiParser } from './emoji-parser';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 //  const wsUrl = 'http://localhost:3044';
