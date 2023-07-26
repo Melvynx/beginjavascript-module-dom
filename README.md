@@ -29,7 +29,7 @@ npm install
 
 ## Test du projet
 
-Pour run tes exercices, il faudra cette fois lancer l'application avec node.
+Pour run tes exercices, il faudra cette fois-ci lancer l'application avec node.
 
 Utilise la commande suivante pour lancer le projet :
 
@@ -37,4 +37,4 @@ Utilise la commande suivante pour lancer le projet :
 npm run dev
 ```
 
-Tu verras un server web s'ouvrir et tu pourras ouvrir le script. On verra dans le cours ce qu'es `vite`.
+Tu verras un server web s'ouvrir et tu pourras ouvrir le script. Nous verrons dans la suite du cours ce qu'est `vite`.
