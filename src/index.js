@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { EmojiConvertor } from 'emoji-js';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 //  const wsUrl = 'http://localhost:3044';
@@ -317,6 +318,11 @@ class Message {
     this.messageList = document.querySelector('#messages-list');
     this.unreadMessageElement = document.querySelector('#unread-message-count');
     this.socket = socket;
+    this.emoticon = new EmojiConvertor();
+
+    this.emoticon.img_set = "twitter"
+    this.emoticon.img_sets.twitter.path = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/';
+    this.emoticon.replace_mode = 'img';
 
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
@@ -378,38 +384,32 @@ class Message {
   addMessage(message) {
     console.log('this', this);
     console.log('Add message');
+
     const messageElement = document.createElement('li');
+    messageElement.classList.add('flex');
+    messageElement.classList.add('items-center');
 
-    // if message include a link, add target blank to open link in new tab
-    if (message.includes('http')) {
+    if (message.includes('https://') || message.includes('http://')) {
       messageElement.innerHTML = message.replace(
-        /http(s)?:\/\/(.*?)\s/g,
-        (match) => `<a href="${match}" target="_blank">${match}</a> `
+        /(https?:\/\/[^\s]+)/g,
+        (match) => `<a class="text-blue-600 hover:text-blue-500" href="${match}" target="_blank">${match}</a> `
       );
+    } else {
+      messageElement.innerText = message;
     }
 
-    // if include an gif, add img tag
-    if (message.includes('.gif')) {
-      messageElement.innerHTML = message.replace(
-        /(.*?)\.(gif)/g,
-        (match) => `<img src="${match}" />`
-      );
-    }
+    messageElement.innerHTML = this.emoticon.replace_colons(messageElement.innerHTML);
 
-    messageElement.innerText = message;
     const firstChild = this.element.firstChild;
     console.log({ firstChild });
-    // this.element.firstChild.append(messageElement);
+
     this.messageList.append(messageElement);
 
     if (!this.open) {
       this.unreadMessage++;
     }
-
-    // scroll to bottom of message list when new message is added
-    setTimeout(() => {
-      this.messageList.scrollTop = this.messageList.scrollHeight;
-    }, 5);
+    
+    this.messageList.scrollTop = this.messageList.scrollHeight;
   }
 }
 

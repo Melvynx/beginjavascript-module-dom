@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
+    "@types/emoji-js": "^3.5.0",
     "emoji-js": "^3.7.0",
     "fastify": "^4.20.0",
     "i": "^0.3.7",

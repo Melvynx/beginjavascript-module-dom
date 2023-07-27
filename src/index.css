@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 .pixel {
-  /* border: 1px solid black; */
   --size: 20px;
   width: var(--size);
   height: var(--size);
@@ -40,4 +39,11 @@
 
 #messages-list {
   width: 450px;
+}
+
+img.emoji {
+  margin-left: 4px;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
 }
