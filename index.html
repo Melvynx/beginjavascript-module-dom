@@ -8,8 +8,14 @@
     <link rel="stylesheet" href="./src/index.css" />
 
     <meta property="og:title" content="r/placejs" />
-    <meta property="og:description" content="r/placejs is a JavaScript version of the r/place experiment made by Reddit." />
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/927843710669062204/1133873210736251001/image.png" />
+    <meta
+      property="og:description"
+      content="r/placejs is a JavaScript version of the r/place experiment made by Reddit."
+    />
+    <meta
+      property="og:image"
+      content="https://cdn.discordapp.com/attachments/927843710669062204/1133873210736251001/image.png"
+    />
     <meta property="og:url" content="https://placejs.codelynx.dev" />
   </head>
 
@@ -26,12 +32,16 @@
 
     <div class="py-4">
       <div class="flex flex-col items-center justify-center">
-        <h1 class="text-4xl text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#ff4500] to-[#f5dd1b]">
+        <h1
+          class="text-4xl text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#ff4500] to-[#f5dd1b]"
+        >
           r/placejs
         </h1>
 
         <div class="flex items-center mt-2 gap-1">
-          <div class="flex items-center gap-1 bg-red-200 border border-red-600 px-1 py-0.5 rounded-md flex items-center">
+          <div
+            class="flex items-center gap-1 bg-red-200 border border-red-600 px-1 py-0.5 rounded-md flex items-center"
+          >
             <div class="h-2 w-2 animate-pulse rounded-full -mb-0.5 bg-red-600"></div>
             <div class="flex items-center gap-1">
               <span id="count" class="text-gray-600">0</span>
@@ -39,22 +49,38 @@
             </div>
           </div>
 
-          <div class="flex items-center gap-1 bg-gray-300 border border-gray-600 px-1 py-0.5 rounded-md flex items-center">
+          <div
+            class="flex items-center gap-1 bg-gray-300 border border-gray-600 px-1 py-0.5 rounded-md flex items-center"
+          >
             <div class="-mb-0.5">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-compass"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polygon
+                  points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+                />
+              </svg>
             </div>
             <div class="flex items-center gap-1">
               <span id="position" class="text-gray-600">x: 0, y: 0</span>
             </div>
           </div>
         </div>
-
-        <span id="position" class="mt-1.5 text-sm text-gray-500">Move your mouse over a pixel to see its position</span>
       </div>
       <div class="flex flex-col items-center justify-center mt-4">
         <div id="board" class="shadow"></div>
 
-        <div class="flex gap-1 mt-5 gap-4">
+        <div class="flex mt-5 gap-3">
           <div class="flex items-center gap-1">
             <div class="h-4 w-4 rounded-full bg-red-500"></div>
             <span id="color-ff4500">0</span>
@@ -76,7 +102,9 @@
             <span id="color-fed734">0</span>
           </div>
           <div class="flex items-center gap-1">
-            <div class="h-4 w-4 rounded-full bg-white border border-dashed border-black"></div>
+            <div
+              class="h-4 w-4 rounded-full bg-white border border-dashed border-black"
+            ></div>
             <span id="color-f9fafc">0</span>
           </div>
           <div class="flex items-center gap-1">
@@ -85,9 +113,15 @@
           </div>
         </div>
 
-        <div class="mt-5 p-1 border-yellow-100 border rounded bg-yellow-300/10 max-w-sm text-center">
+        <div
+          class="mt-5 p-1 border-yellow-100 border rounded bg-yellow-300/10 max-w-sm text-center"
+        >
           You will rebuild it with JavaScript in the
-          <a class="text-yellow-500 hover:underline" href="https://codelynx.dev/beginjavascript/courses">BeginJavaScript</a>
+          <a
+            class="text-yellow-500 hover:underline"
+            href="https://codelynx.dev/beginjavascript/courses"
+            >BeginJavaScript</a
+          >
           online courses.
         </div>
         <div id="warning" class="hidden text-sm text-red-500">
@@ -96,47 +130,108 @@
       </div>
     </div>
     <div class="fixed bottom-0 left-0 right-0">
-      <div class="bg-white w-fit mx-auto my-4 p-4 rounded-md shadow-md flex flex-col gap-2 justify-center items-center">
-      <div id="time-left" class="hidden"></div>
-      <div id="color-picker" class="flex items-center justify-center"></div>
-    </div>
-  </div>
-
-  <div class="fixed bottom-4 left-4 z-30">
-    <div id="message" class="shadow border-2 rounded-md hidden bg-white h-72">
-      <div class="flex items-center justify-between p-2 gap-2">
-        <span class="font-bold">Chat</span>
+      <div
+        class="bg-white w-fit mx-auto my-4 p-4 rounded-md shadow-md flex flex-col gap-2 justify-center items-center"
+      >
+        <div id="time-left" class="hidden"></div>
+        <div id="color-picker" class="flex items-center justify-center"></div>
       </div>
+    </div>
 
-      <ul id="messages-list" class="overflow-auto h-52 p-2">
-        <li class="">
-          Welcome to the r/placejs chat, please be cool with others participants, your username is <span id="username" class="font-bold"></span>.
-          <br>You can re-generate your username by clicking on this button:
-          <button id="regenerate-username" class="text-blue-500 hover:underline">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-cw"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-          </button>, or you can type a custom username with <kbd class="bg-gray-200">/username your-username</kbd>
-        </li>
-      </ul>
-
-      <div class="flex top-0 items-end px-2 gap-1">
-        <div class="flex p-1 shadow rounded border bg-transparent border-slate-400 flex-1 h-8">
-          <input id="message-input" class="w-full bg-transparent outline-none" maxlength="100" />
-          <span id="message-length" class="px-1.5 text-gray-500">0/100</span>
+    <div class="fixed bottom-4 left-4 z-30">
+      <div id="message" class="shadow border-2 rounded-md hidden bg-white h-72">
+        <div class="flex items-center justify-between p-2 gap-2">
+          <span class="font-bold">Chat</span>
         </div>
-        <button id="submit-message" class="bg-indigo-600 rounded text-white px-2 h-8">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-        </button>
+
+        <ul id="messages-list" class="overflow-auto h-52 p-2">
+          <li class="">
+            Welcome to the r/placejs chat, please be cool with others participants,
+            your username is <span id="username" class="font-bold"></span>. <br />You
+            can re-generate your username by clicking on this button:
+            <button id="regenerate-username" class="text-blue-500 hover:underline">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-rotate-cw"
+              >
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+                <path d="M21 3v5h-5" />
+              </svg></button
+            >, or you can type a custom username with
+            <kbd class="bg-gray-200">/username your-username</kbd>
+          </li>
+        </ul>
+
+        <div class="flex top-0 items-end px-2 gap-1">
+          <div
+            class="flex p-1 shadow rounded border bg-transparent border-slate-400 flex-1 h-8"
+          >
+            <input
+              id="message-input"
+              class="w-full bg-transparent outline-none"
+              maxlength="100"
+            />
+            <span id="message-length" class="px-1.5 text-gray-500">0/100</span>
+          </div>
+          <button
+            id="submit-message"
+            class="bg-indigo-600 rounded text-white px-2 h-8"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-send"
+            >
+              <path d="m22 2-7 20-4-9-9-4Z" />
+              <path d="M22 2 11 13" />
+            </svg>
+          </button>
+        </div>
       </div>
+
+      <button
+        class="bg-white border border-slate-400 p-2 shadow-md rounded-md relative"
+        id="toggle-message-btn"
+      >
+        <span
+          id="unread-message-count"
+          class="absolute h-5 w-5 bg-red-500 rounded-full -right-3 -top-3 text-white text-xs flex justify-center pt-0.5"
+        >
+          0
+        </span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-messages-square"
+        >
+          <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
+          <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
+        </svg>
+      </button>
     </div>
 
-    <button class="bg-white border border-slate-400 p-2 shadow-md rounded-md relative" id="toggle-message-btn">
-      <span id="unread-message-count" class="absolute h-5 w-5 bg-red-500 rounded-full -right-3 -top-3 text-white text-xs flex justify-center pt-0.5">
-        0
-      </span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-messages-square"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
-    </button>
-  </div>
-
-  <script type="module" src="/src/index.js"></script>
-</body>
+    <script type="module" src="/src/index.js"></script>
+  </body>
 </html>
