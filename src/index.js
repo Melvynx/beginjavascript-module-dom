@@ -1,5 +1,5 @@
-import { io } from 'socket.io-client';
 import { EmojiConvertor } from 'emoji-js';
+import { io } from 'socket.io-client';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 //  const wsUrl = 'http://localhost:3044';
@@ -14,7 +14,7 @@ class Game {
     '#821f9f',
     '#fed734',
     '#f9fafc',
-    '#000000'
+    '#000000',
   ];
 
   static BOARD_SIZE = [25, 25];
@@ -38,49 +38,32 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
-    this.username = "loading";
-
-    const usernameElement = document.querySelector('#username');
-
-    const username = await fetch('https://randomuser.me/api/')
-      .then((res) => res.json())
-      .then((data) => data.results[0].login.username)
-      .catch(() => 'user' + Math.floor(Math.random() * 1000));
-
-    const localUsername = localStorage.getItem('username');
-    console.log({ localUsername });
-    if (!localUsername) {
-      this.username = username;
-      localStorage.setItem('username', this.username);
-    } this.username = localStorage.getItem('username');
-
-    usernameElement.innerText = this.username;
-    
-    this.pixelsCount = []
+    this.pixelsCount = [];
     this.updateCounts();
 
     this.socket = socket;
-    
+
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
-    
+
     this.socket.on('pixel change', (data) => {
-      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex) this.pixelBeforeEdition = null;
-      this.updatePixel(data)
+      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex)
+        this.pixelBeforeEdition = null;
+      this.updatePixel(data);
     });
-    
+
     this.socket.on('pong', (data) => {
       this.lastPixelAddedDate = new Date(data.date);
-      this.toggleTimeLeft(this.lastPixelAddedDate)
-      
+      this.toggleTimeLeft(this.lastPixelAddedDate);
+
       if (!data.success) {
         this.updatePixel(this.pixelBeforeEdition);
-        this.pixelBeforeEdition = null
-        alert(data.message)
+        this.pixelBeforeEdition = null;
+        alert(data.message);
       }
     });
-    
+
     this.socket.on('connected', (data) => {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(data.live);
@@ -94,7 +77,8 @@ class Game {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') {
         const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
-        const nextColorIndex = currentColorIndex + 1 >= Game.COLORS.length ? 0 : currentColorIndex + 1;
+        const nextColorIndex =
+          currentColorIndex + 1 >= Game.COLORS.length ? 0 : currentColorIndex + 1;
         this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
         this.colorPicker.updateActiveColor();
       }
@@ -103,7 +87,8 @@ class Game {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') {
         const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
-        const nextColorIndex = currentColorIndex - 1 < 0 ? Game.COLORS.length - 1 : currentColorIndex - 1;
+        const nextColorIndex =
+          currentColorIndex - 1 < 0 ? Game.COLORS.length - 1 : currentColorIndex - 1;
         this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
         this.colorPicker.updateActiveColor();
       }
@@ -146,7 +131,9 @@ class Game {
       const count = this.pixels.filter((pixel) => pixel.color === color).length;
       this.pixelsCount[color] = count;
 
-      const countElement = document.querySelector(`#color-${color.replace('#', '')}`);
+      const countElement = document.querySelector(
+        `#color-${color.replace('#', '')}`
+      );
       countElement.innerText = count;
     }
   }
@@ -163,13 +150,13 @@ class Game {
     const pixelData = {
       pixelIndex: pixel.index,
       color: this.colorPicker.currentColor,
-    }
+    };
 
     this.pixelBeforeEdition = {
       pixelIndex: pixel.index,
       color: pixel.color,
     };
-    this.updatePixel(pixelData)
+    this.updatePixel(pixelData);
     this.socket.emit('pixel change', pixelData);
   }
 
@@ -292,7 +279,7 @@ class Message {
   }
 
   set unreadMessage(newUnreadMessage) {
-    this._unreadMessage = newUnreadMessage > 9 ? "9+" : newUnreadMessage;
+    this._unreadMessage = newUnreadMessage > 9 ? '9+' : newUnreadMessage;
 
     if (this._unreadMessage === 0) {
       this.unreadMessageElement.classList.add('hidden');
@@ -313,55 +300,49 @@ class Message {
     else this.element.classList.add('hidden');
   }
 
-  init() {
+  get username() {
+    return localStorage.getItem('username');
+  }
+
+  set username(newValue) {
+    localStorage.setItem('username', newValue);
+  }
+
+  async init() {
     this.element = document.querySelector('#message');
     this.messageList = document.querySelector('#messages-list');
     this.unreadMessageElement = document.querySelector('#unread-message-count');
     this.socket = socket;
     this.emoticon = new EmojiConvertor();
 
-    this.emoticon.img_set = "twitter"
-    this.emoticon.img_sets.twitter.path = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/';
+    this.emoticon.img_set = 'twitter';
+    this.emoticon.img_sets.twitter.path =
+      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/';
     this.emoticon.replace_mode = 'img';
+
+    if (!this.username) {
+      const username = await fetch('https://randomuser.me/api/')
+        .then((res) => res.json())
+        .then((data) => data.results[0].login.username)
+        .catch(() => 'user' + Math.floor(Math.random() * 1000));
+
+      this.username = username;
+    }
 
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
-
-      const audio = new Audio('/sounds/message.mp3');
-      audio.play();
     });
 
     this.submitButton = document.querySelector('#submit-message');
     this.input = document.querySelector('#message-input');
-    this.username = document.querySelector('#username');
-
-    const checkIfCommand = (message) => {
-      if (message.startsWith('/username')) {
-        const newUsername = message.split(' ')[1].substring(0, 16);
-        if (newUsername) {
-          this.username.innerText = newUsername;
-
-          localStorage.setItem('username', newUsername);
-          this.sendMessage(`${game.username} was renamed to ${newUsername}`);
-        }
-      }
-    };
 
     this.submitButton.addEventListener('click', () => {
-      if (this.input.value.length === 0) return;
-      if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
-      const message = game.username + ': ' + this.input.value;
-      this.sendMessage(message, this._identifier);
-      this.input.value = '';
+      this.sendMessage();
     });
 
     this.input.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
-        if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
-        if (this.input.value.length === 0) return;
-        const message = game.username + ': ' + this.input.value;
-        this.sendMessage(message, this._identifier);
-        this.input.value = '';
+        this.sendMessage();
       }
     });
 
@@ -375,9 +356,39 @@ class Message {
     });
   }
 
-  sendMessage(message) {
+  renameIfNeeded(value) {
+    if (!value.startsWith('/username')) {
+      return;
+    }
+
+    const newUsername = value.split(' ')[1].substring(0, 16);
+    console.log({ value, newUsername });
+    if (!newUsername) {
+      return;
+    }
+
+    const previousUsername = this.username;
+    this.username = newUsername;
+    this.input.value = '';
+
+    this.sendMessageToServer(`${previousUsername} was renamed to ${newUsername}`);
+  }
+
+  sendMessage() {
+    if (this.input.value.startsWith('/username'))
+      return this.renameIfNeeded(this.input.value);
+
+    if (this.input.value.length === 0) return;
+
+    const message = this.username + ': ' + this.input.value;
+    this.sendMessageToServer(message);
+
+    this.input.value = '';
+  }
+
+  sendMessageToServer(message) {
     this.socket.emit('message', {
-      message
+      message,
     });
   }
 
@@ -392,13 +403,16 @@ class Message {
     if (message.includes('https://') || message.includes('http://')) {
       messageElement.innerHTML = message.replace(
         /(https?:\/\/[^\s]+)/g,
-        (match) => `<a class="text-blue-600 hover:text-blue-500" href="${match}" target="_blank">${match}</a> `
+        (match) =>
+          `<a class="text-blue-600 hover:text-blue-500" href="${match}" target="_blank">${match}</a> `
       );
     } else {
       messageElement.innerText = message;
     }
 
-    messageElement.innerHTML = this.emoticon.replace_colons(messageElement.innerHTML);
+    messageElement.innerHTML = this.emoticon.replace_colons(
+      messageElement.innerHTML
+    );
 
     const firstChild = this.element.firstChild;
     console.log({ firstChild });
@@ -408,7 +422,7 @@ class Message {
     if (!this.open) {
       this.unreadMessage++;
     }
-    
+
     this.messageList.scrollTop = this.messageList.scrollHeight;
   }
 }
