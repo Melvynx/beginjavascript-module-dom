@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { EmojiConvertor } from 'emoji-js';
 
 const wsUrl = 'https://beginjavascript-module-dom-production.up.railway.app';
 //  const wsUrl = 'http://localhost:3044';
@@ -13,8 +14,9 @@ class Game {
     '#821f9f',
     '#fed734',
     '#f9fafc',
-    '#000000',
+    '#000000'
   ];
+
   static BOARD_SIZE = [25, 25];
   static PIXEL_SIZE = 20;
   static TIME_TO_WAIT = 3000;
@@ -28,7 +30,7 @@ class Game {
     this.interval = null;
   }
 
-  init() {
+  async init() {
     this.board = document.querySelector('#board');
     this.timeLeft = document.querySelector('#time-left');
     this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
@@ -36,36 +38,82 @@ class Game {
     this.warning.init();
     this.pixels = [];
 
+    this.username = "loading";
+
+    const usernameElement = document.querySelector('#username');
+
+    const username = await fetch('https://randomuser.me/api/')
+      .then((res) => res.json())
+      .then((data) => data.results[0].login.username)
+      .catch(() => 'user' + Math.floor(Math.random() * 1000));
+
+    const localUsername = localStorage.getItem('username');
+    console.log({ localUsername });
+    if (!localUsername) {
+      this.username = username;
+      localStorage.setItem('username', this.username);
+    } this.username = localStorage.getItem('username');
+
+    usernameElement.innerText = this.username;
+    
+    this.pixelsCount = []
+    this.updateCounts();
+
     this.socket = socket;
+    
     this.socket.on('init', (initialBoardState) =>
       this.initializeBoard(initialBoardState)
     );
+    
     this.socket.on('pixel change', (data) => {
-      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex)
-        this.pixelBeforeEdition = null;
+      if (data.pixelIndex === this.pixelBeforeEdition?.pixelIndex) this.pixelBeforeEdition = null;
       this.updatePixel(data)
     });
+    
     this.socket.on('pong', (data) => {
       this.lastPixelAddedDate = new Date(data.date);
       this.toggleTimeLeft(this.lastPixelAddedDate)
+      
       if (!data.success) {
         this.updatePixel(this.pixelBeforeEdition);
         this.pixelBeforeEdition = null
         alert(data.message)
       }
     });
+    
     this.socket.on('connected', (data) => {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(data.live);
     });
+
     this.socket.on('disconnected', (data) => {
       const connectedUsers = document.querySelector('#count');
       connectedUsers.innerText = Number(connectedUsers.innerText) - 1;
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
+        const nextColorIndex = currentColorIndex + 1 >= Game.COLORS.length ? 0 : currentColorIndex + 1;
+        this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
+        this.colorPicker.updateActiveColor();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        const currentColorIndex = Game.COLORS.indexOf(this.colorPicker.currentColor);
+        const nextColorIndex = currentColorIndex - 1 < 0 ? Game.COLORS.length - 1 : currentColorIndex - 1;
+        this.colorPicker.currentColor = Game.COLORS[nextColorIndex];
+        this.colorPicker.updateActiveColor();
+      }
     });
   }
 
   updatePixel(data) {
     this.pixels[data.pixelIndex].color = data.color;
+    this.pixelsCount[data.color]++;
+    this.updateCounts();
   }
 
   initializeBoard(values) {
@@ -77,7 +125,29 @@ class Game {
       const pixel = new Pixel(currentValue, i);
       this.pixels.push(pixel);
       pixel.element.addEventListener('click', (e) => this.onPixelClick(pixel));
+      pixel.element.addEventListener('mouseover', (e) => {
+        const position = document.querySelector('#position');
+        const x = i % Game.BOARD_SIZE[0];
+        const y = Math.floor(i / Game.BOARD_SIZE[0]);
+        position.innerText = `x: ${x}, y: ${y}`;
+      });
+
+      pixel.element.addEventListener('mouseleave', (e) => {
+        const position = document.querySelector('#position');
+        position.innerText = 'x: 0, y: 0';
+      });
+
       this.board.append(pixel.element);
+    }
+  }
+
+  updateCounts() {
+    for (const color of Game.COLORS) {
+      const count = this.pixels.filter((pixel) => pixel.color === color).length;
+      this.pixelsCount[color] = count;
+
+      const countElement = document.querySelector(`#color-${color.replace('#', '')}`);
+      countElement.innerText = count;
     }
   }
 
@@ -114,11 +184,13 @@ class Game {
       if (seconds >= Game.TIME_TO_WAIT / 1000) {
         clearInterval(this.interval);
         this.timeLeft.innerText = '';
+        this.timeLeft.classList.add('hidden');
       }
     }, 1000);
   }
 
   toggleTimeLeft() {
+    this.timeLeft.classList.remove('hidden');
     this.timeLeft.innerText = `${Game.TIME_TO_WAIT / 1000}s`;
     this.startCountdown();
   }
@@ -220,7 +292,7 @@ class Message {
   }
 
   set unreadMessage(newUnreadMessage) {
-    this._unreadMessage = newUnreadMessage > 9 ? 9 : newUnreadMessage;
+    this._unreadMessage = newUnreadMessage > 9 ? "9+" : newUnreadMessage;
 
     if (this._unreadMessage === 0) {
       this.unreadMessageElement.classList.add('hidden');
@@ -237,11 +309,8 @@ class Message {
 
   set open(newOpen) {
     // if newOpen is true, remove class hidden from message element
-    if (newOpen) {
-      this.element.classList.remove('hidden');
-    } else {
-      this.element.classList.add('hidden');
-    }
+    if (newOpen) this.element.classList.remove('hidden');
+    else this.element.classList.add('hidden');
   }
 
   init() {
@@ -249,28 +318,54 @@ class Message {
     this.messageList = document.querySelector('#messages-list');
     this.unreadMessageElement = document.querySelector('#unread-message-count');
     this.socket = socket;
+    this.emoticon = new EmojiConvertor();
+
+    this.emoticon.img_set = "twitter"
+    this.emoticon.img_sets.twitter.path = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/';
+    this.emoticon.replace_mode = 'img';
 
     this.socket.on('message', (data) => {
       this.addMessage(data.message);
+
+      const audio = new Audio('/sounds/message.mp3');
+      audio.play();
     });
 
     this.submitButton = document.querySelector('#submit-message');
     this.input = document.querySelector('#message-input');
+    this.username = document.querySelector('#username');
+
+    const checkIfCommand = (message) => {
+      if (message.startsWith('/username')) {
+        const newUsername = message.split(' ')[1].substring(0, 16);
+        if (newUsername) {
+          this.username.innerText = newUsername;
+
+          localStorage.setItem('username', newUsername);
+          this.sendMessage(`${game.username} was renamed to ${newUsername}`);
+        }
+      }
+    };
 
     this.submitButton.addEventListener('click', () => {
-      const message = this.input.value;
-      this.sendMessage(message);
+      if (this.input.value.length === 0) return;
+      if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
+      const message = game.username + ': ' + this.input.value;
+      this.sendMessage(message, this._identifier);
       this.input.value = '';
     });
+
     this.input.addEventListener('keyup', (e) => {
       if (e.key === 'Enter') {
-        const message = this.input.value;
-        this.sendMessage(message);
+        if (this.input.value.startsWith('/username')) return checkIfCommand(this.input.value);
+        if (this.input.value.length === 0) return;
+        const message = game.username + ': ' + this.input.value;
+        this.sendMessage(message, this._identifier);
         this.input.value = '';
       }
     });
 
-    this.openMessageButton = document.querySelector('#open-message-btn');
+    this.openMessageButton = document.querySelector('#toggle-message-btn');
 
     this.openMessageButton.addEventListener('click', () => {
       this.open = !this.open;
@@ -282,28 +377,39 @@ class Message {
 
   sendMessage(message) {
     this.socket.emit('message', {
-      message,
+      message
     });
   }
 
   addMessage(message) {
     console.log('this', this);
     console.log('Add message');
+
     const messageElement = document.createElement('li');
-    messageElement.innerText = message;
+    messageElement.classList.add('flex');
+    messageElement.classList.add('items-center');
+
+    if (message.includes('https://') || message.includes('http://')) {
+      messageElement.innerHTML = message.replace(
+        /(https?:\/\/[^\s]+)/g,
+        (match) => `<a class="text-blue-600 hover:text-blue-500" href="${match}" target="_blank">${match}</a> `
+      );
+    } else {
+      messageElement.innerText = message;
+    }
+
+    messageElement.innerHTML = this.emoticon.replace_colons(messageElement.innerHTML);
+
     const firstChild = this.element.firstChild;
     console.log({ firstChild });
-    // this.element.firstChild.append(messageElement);
+
     this.messageList.append(messageElement);
 
     if (!this.open) {
       this.unreadMessage++;
     }
-
-    // scroll to bottom of message list when new message is added
-    setTimeout(() => {
-      this.messageList.scrollTop = this.messageList.scrollHeight;
-    }, 5);
+    
+    this.messageList.scrollTop = this.messageList.scrollHeight;
   }
 }
 

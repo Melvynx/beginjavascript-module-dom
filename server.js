@@ -3,6 +3,21 @@ import Fastify from 'fastify';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
+const randomCheatMessages = [
+  'Petit tricheur',
+  'Lol, tu crois que je vais te laisser faire ?',
+  'Raté',
+  'Tu as cru ?',
+  'Pas de chance',
+  'Pikachu, attaque éclair !',
+  'Aucune chance',
+  'Vous ne passerez pas !',
+  'Ta ruse ne te servira à rien'
+];
+
+// getRCM = getRandomCheatMessage
+const getRCM = () => randomCheatMessages[Math.floor(Math.random() * randomCheatMessages.length)];
+
 const fastify = Fastify();
 
 const corsParam = {
@@ -29,7 +44,7 @@ const ALLOWED_COLORS = [
   '#821f9f',
   '#fed734',
   '#f9fafc',
-  '#000000',
+  '#000000'
 ];
 
 let userClickData = new Map();
@@ -43,11 +58,12 @@ io.on('connection', (socket) => {
   io.emit('connected', {
     live: connectedUsers
   });
+  
   socket.emit('init', BOARD);
 
   socket.on('message', (data) => {
     // take only first 100 characters
-    const message = String(data.message).substring(0, 100);
+    const message = String(data.message).substring(0, 350);
 
     io.emit('message', {
       message,
@@ -56,7 +72,7 @@ io.on('connection', (socket) => {
 
   socket.on('pixel change', (data) => {
     if (!ALLOWED_COLORS.includes(data.color)) {
-      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
+      socket.emit('pong', { success: false, message: getRCM(), date: new Date() });
       return;
     }
 
@@ -68,7 +84,7 @@ io.on('connection', (socket) => {
 
     if (canUserClick(clientIp, socketId, clientUserAgent)) {
       if (data.pixelIndex > BOARD.length - 1) {
-        socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
+        socket.emit('pong', { success: false, message: getRCM(), date: new Date() });
         return;
       }
       console.log(data);
@@ -86,7 +102,7 @@ io.on('connection', (socket) => {
       socket.emit('pong', { success: true, message: 'Pixel changed', date: new Date(), pixel: data });
     } else {
       // send socket only to the user
-      socket.emit('pong', { success: false, message: 'Petit tricheur', date: new Date() });
+      socket.emit('pong', { success: false, message: getRCM(), date: new Date() });
       console.log('user not allowed to click');
     }
   });
