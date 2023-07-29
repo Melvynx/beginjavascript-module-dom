@@ -24,7 +24,7 @@ class Game {
   initPixels() {
     for (let i = 0; i < Game.BOARD_SIZE[0] * Game.BOARD_SIZE[1]; i++) {
       const pixel = new Pixel(Game.COLORS[Game.COLORS.length - 1]);
-      pixel.element.addEventListener('click', (e) => this.onPixelClick(pixel));
+      pixel.element.addEventListener('click', () => this.onPixelClick(pixel));
       this.board.append(pixel.element);
     }
   }

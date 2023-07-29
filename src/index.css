@@ -17,7 +17,7 @@
   width: calc(var(--size) + var(--hover-size) * 2);
   position: relative;
 
-  @apply shadow-md z-20;
+  @apply z-20 shadow-md;
 }
 
 .pixel-picker {
@@ -27,7 +27,7 @@
 }
 
 .pixel-picker.active {
-  @apply outline outline-black outline-offset-0 z-10;
+  @apply z-10 outline outline-offset-0 outline-black;
 }
 
 #board {
