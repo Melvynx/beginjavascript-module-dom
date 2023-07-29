@@ -38,3 +38,13 @@ npm run dev
 ```
 
 Tu verras un server web s'ouvrir et tu pourras ouvrir le script. Nous verrons dans la suite du cours ce qu'est `vite`.
+
+## Outils du projet
+
+Dans ce projet, pour la première fois, on va utiliser **ESLint** afin de vérifier que notre code est bien écrit. C'est un outil très utilisé dans le monde du développement web.
+
+Il va nous dire si on utilise des mauvaises pratiques, si on déclare des variables qui ne sont pas utilisées, etc...
+
+Il te permet d'avoir un code plus robuste est de voir les erreurs.
+
+En fin de ce module, lors de la création du projet finale, on prendra un moment pour configurer et comprendre ESLint.
