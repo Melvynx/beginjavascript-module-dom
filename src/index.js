@@ -13,7 +13,6 @@ class Game {
     // 💡 Définit le style suivant pour que ce soit beau
     // ⚡️ this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
     // 🦁 Appels la méthode this.initPixels()
-    // 🦁 Appels la méthode this.colorPicker.initPixelPicker()
   }
 
   // 🦁 Créer une méthode `initPixels`

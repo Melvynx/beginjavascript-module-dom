@@ -40,7 +40,6 @@ class ColorPicker {
     this.colors = colors;
     this.currentColor = currentColor;
     this.pixels = [];
-    this.interval = null;
   }
 
   init() {

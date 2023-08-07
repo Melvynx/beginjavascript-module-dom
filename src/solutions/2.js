@@ -4,8 +4,6 @@ class Game {
   static PIXEL_SIZE = 20;
   static TIME_TO_WAIT = 5000;
 
-  lastPixelAddedDate = null;
-
   constructor() {
     this.colorPicker = new ColorPicker(Game.COLORS, Game.COLORS[0]);
   }
@@ -27,7 +25,6 @@ class Game {
 
   onPixelClick(pixel) {
     pixel.color = this.colorPicker.currentColor;
-    this.lastPixelAddedDate = new Date();
   }
 }
 
@@ -57,12 +54,10 @@ class ColorPicker {
     this.colors = colors;
     this.currentColor = currentColor;
     this.pixels = [];
-    this.interval = null;
   }
 
   init() {
     this.element = document.querySelector('#color-picker');
-    this.timeLeft = document.querySelector('#time-left');
 
     for (const color of this.colors) {
       const pixel = new Pixel(color);
@@ -74,25 +69,21 @@ class ColorPicker {
       }
 
       pixel.element.addEventListener('click', () => {
-        this.onColocPickerClick(color);
+        this.onColorPixelClick(pixel);
       });
 
-      this.element.append(pixel.element);
+      this.element.appendChild(pixel.element);
     }
   }
 
-  onColocPickerClick(color) {
-    this.currentColor = color;
+  onColorPixelClick(pixel) {
+    this.currentColor = pixel.color;
     this.updateActiveColor();
   }
 
   updateActiveColor() {
     for (const pixel of this.pixels) {
-      if (pixel.color === this.currentColor) {
-        pixel.element.classList.add('active');
-      } else {
-        pixel.element.classList.remove('active');
-      }
+      pixel.element.classList.toggle('active', pixel.color === this.currentColor);
     }
   }
 }
