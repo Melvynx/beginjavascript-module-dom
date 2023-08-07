@@ -52,7 +52,7 @@ class Game {
       const seconds = Math.floor(diff / 1000);
       this.timeLeft.innerText = `${5 - seconds}s`;
 
-      if (seconds >= Game.TIME_TO_WAIT / 1000) {
+      if (diff >= Game.TIME_TO_WAIT) {
         clearInterval(this.interval);
         this.timeLeft.innerText = '';
       }
@@ -67,7 +67,7 @@ class Game {
 
 class Warning {
   constructor() {
-    this.interval = null;
+    this.timeout = null;
   }
 
   init() {
@@ -77,8 +77,8 @@ class Warning {
   showWarning() {
     this.element.classList.remove('hidden');
 
-    clearInterval(this.interval);
-    this.interval = setTimeout(() => {
+    clearInterval(this.timeout);
+    this.timeout = setTimeout(() => {
       this.element.classList.add('hidden');
     }, 4000);
   }
@@ -89,10 +89,9 @@ class Pixel {
   static PIXEL_PICKER_CLASS = 'pixel-picker';
 
   constructor(color) {
-    this._color = color;
     this.element = document.createElement('div');
     this.element.classList.add(Pixel.PIXEL_CLASS);
-    this.element.style.background = color;
+    this.color = color;
   }
 
   set color(newColor) {

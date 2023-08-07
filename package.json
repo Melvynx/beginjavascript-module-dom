@@ -16,13 +16,5 @@
     "prettier-plugin-tailwindcss": "^0.4.1",
     "tailwindcss": "^3.3.3",
     "vite": "^4.4.5"
-  },
-  "dependencies": {
-    "@fastify/cors": "^8.3.0",
-    "fastify": "^4.20.0",
-    "i": "^0.3.7",
-    "npm": "^9.8.1",
-    "socket.io": "^4.7.1",
-    "socket.io-client": "^4.7.1"
   }
 }

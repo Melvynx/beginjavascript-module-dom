@@ -1,4 +1,4 @@
-# DOM - r/place
+# DOM - r/place
 
 Dans ce module, on va pour la première fois intéragir avec le DOM. On va s'intéresser principalement au **JavaScript** qui compose notre application.
 
@@ -32,6 +32,8 @@ Pour récupérer ces éléments tu peux utiliser le `querySelector` qui est main
 const board = document.querySelector('#board');
 ```
 
+- [querySelector](https://developer.mozilla.org/fr/docs/Web/API/Document/querySelector)
+
 ### Tâche à faire
 
 Il va falloir créer 3 classes : `Board`, `Pixel` et `ColorPicker`
@@ -49,11 +51,14 @@ Les tâches à faire dans le board sont les suivantes :
 
 La function `initPixels` va ensuite créer un Pixel pour chaque pixel du board. Pour ça, on va utiliser une boucle `for`. Avec le pixel, on ajoutera l'élément dans celui ci dans le board avec `this.board.append`.
 
-#### Class Pixel
+#### Class Pixel
 
-La class Pixel va créer un élément avec `document.createElement("div")` puis ajouter la class `pixel` à cet élément.
+La class Pixel va créer un élément avec `document.createElement("div")` puis ajouter la class `pixel` à cet élément (via la propriétés static).
 
-Le `Pixel` prends aussi une couleur en paramètre dans son constructeur, cette couleur va être appliquée à notre pixel
+Le `Pixel` prends aussi une couleur en paramètre dans son constructeur, cette couleur va être appliquée à notre pixel avec `style.backgroundColor`.
+
+- [classList](https://developer.mozilla.org/fr/docs/Web/API/Element/classList) : pour ajouter la class
+- [element.style](https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/style) : pour ajouter le background
 
 #### Class ColorPicker
 
@@ -69,9 +74,9 @@ Si le `Pixel` est actuellement affiché, on ajoute aussi la class `"active"`.
 
 Pour ce premier exercice, les emojis sont là pour te guider. Je reste un peu flou volontairement pour te laisser une certaine liberté dans ton implémentation. Regarde le résultat en cliquant sur `Solution 3` dans le nav pour voir ce que j'attends de toi.
 
-💡 Tu retrouveras le résultat attendu [dans la page de la solution 2](http://localhost:5173/src/solutions/1.html)
+💡 Tu retrouveras le résultat attendu [dans la page de la solution 1](http://localhost:5173/src/solutions/1.html)
 
-## Partie 2 - Events
+## Partie 2 - Events
 
 Notre board est ennuyeux... on peux rien faire avec. Il va falloir ajouter des events sur nos pixels pour venir intéragir avec notre board.
 
@@ -90,6 +95,8 @@ pixel.addEventListener('click', () => {
 });
 ```
 
+- [event listener](https://developer.mozilla.org/fr/docs/Web/API/EventTarget/addEventListener)
+
 Comme tu le vois, tu vas devoir aussi créer la méthode `onPixelClick`. Cette méthode va modifier la couleur du pixel actuellement cliqué avec la `currentColor` stockée dans `this.colorPicker`.
 
 ⚠️ Dans la class Pixel il va falloir ajouter un getter et un setter.
@@ -102,6 +109,8 @@ De la même manière, pour chaque pixel du `ColorPicker` on va rajouter un event
 
 Dans la méthode `onColocPickerClick` tu vas venir sur chaque pixels stockés dans `this.pixels`, et regarder si `color` est actuellement égal à la couleur d'un pixel du `ColorPicker`. Si c'est le cas, tu vas venir ajouter la class `active` à l'élément du pixel sinon **tu enlèves la class `active`**.
 
+- [classList](https://developer.mozilla.org/fr/docs/Web/API/Element/classList) : pour ajouter / supprimer la class
+
 ### Bonne chance !
 
 Encore une fois je reste assez flou pour te laisser de la marge de manoeuvre. Regarde le résultat en cliquant sur [Solution 2](http://localhost:5173/src/solutions/2.html) dans le nav pour voir ce que j'attends de toi.
@@ -110,7 +119,7 @@ Encore une fois je reste assez flou pour te laisser de la marge de manoeuvre. Re
 
 Pour l'instant, n'importe qui peut spam de pixel. On va ajouter une limite pour ne pouvoir ajouter qu'un seul pixel toutes les 5 secondes.
 
-Pour ça on va créer une nouvelle class `Warning` qui va s'occuper d'afficher l'élément `#warning` et 4 secondes après, le recacher. Cette class va avoir comme propriétés `this.element` et `this.interval` qui contiendra la référence d'un interval.
+Pour ça on va créer une nouvelle class `Warning` qui va s'occuper d'afficher l'élément `#warning` et 4 secondes après, le recacher. Cette class va avoir comme propriétés `this.element` et `this.timeout` qui contiendra la référence d'un timeout.
 
 Tu vas créer une méthode `showWarning` qui va enlever la class `hidden` de notre élément puis 4 secondes va rajouter la class `hidden`. Ainsi que la méthode `init()` qui va initialiser `this.element`.
 
@@ -143,6 +152,8 @@ Cette méthode sera appelée après avoir changé la méthode d'un pixel, elle c
 
 Cette méthode va utiliser un interval pour que chaque seconde, on calcule le temps restant en seconde et on l'affiche. Je te laisse faire ça un peu tout seul, c'est la dernière partie de notre application !
 
-## Conclusion
+Hésite pas à utiliser ChatGPT, Google, MDN et Stackoverflow pour mener à bien cette mission. Compare aussi avec le résultat finale des exercices.
+
+## Conclusion
 
 Dans cet exercice, on a appris à manipuler le DOM, récupérer des éléments, les stocker, ajouter des event listener. J'espère que tu as apprécié l'aspect fun de cet exercice !
