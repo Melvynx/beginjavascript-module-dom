@@ -12,10 +12,11 @@ class Game {
     // 🦁 Récupère le board
     // 💡 Définit le style suivant pour que ce soit beau
     // ⚡️ this.board.style.gridTemplateColumns = `repeat(${Game.BOARD_SIZE[0]}, ${Game.PIXEL_SIZE}px)`;
-    // 🦁 Appels la méthode this.initPixels()
+    // 🦁 Appelle la méthode this.initPixels()
+    // 🦁 Appelle la méthode this.colorPicker.initPixelPicker()
   }
 
-  // 🦁 Créer une méthode `initPixels`
+  // 🦁 Crée une méthode `initPixels`
   // * Cette méthode doit, pour chaque pixel du board, créer un pixel et l'ajouter au board
 }
 
@@ -24,8 +25,8 @@ class Pixel {
   static PIXEL_PICKER_CLASS = 'pixel-picker';
 
   constructor(color) {
-    // 🦁 Stock la couleur dans _color
-    // 🦁 Créer un élément div qui sera stocké dans this.element
+    // 🦁 Stocke la couleur dans _color
+    // 🦁 Crée un élément div qui sera stocké dans this.element
     // * Définit la couleur du background de l'élément en `color`
     // * Ajoute la classe `Pixel.PIXEL_CLASS` à l'élément
   }
@@ -33,17 +34,17 @@ class Pixel {
 
 class ColorPicker {
   constructor(colors, currentColor) {
-    // 🦁 Stock colors et currentColor
+    // 🦁 Stocke colors et currentColor
     // 🦁 Initie un tableau de pixels
   }
 
-  // 🦁 Créer une méthode `init`
+  // 🦁 Crée une méthode `init`
   // * Cette méthode va récupérer l'élément avec l'id `color-picker`
-  // * Pour chaque couleur, elle va créer un pixel et l'ajouté à l'élément récupéré
-  // * Pour chaque pixel, ajoute la class `Pixel.PIXEL_PICKER_CLASS`
-  // * Si la couleur du pixel est égal à `currentColor`, ajoute la class `active`
-  // * Ajoute le pixel à element avec this.element.append
-  // * Stock le pixel dans le tableau de pixels
+  // * Pour chaque couleur, elle va créer un pixel et l'ajouter à l'élément récupéré
+  // * Pour chaque pixel, ajoute la classe `Pixel.PIXEL_PICKER_CLASS`
+  // * Si la couleur du pixel est égale à `currentColor`, ajoute la classe `active`
+  // * Ajoute le pixel à l'élément avec this.element.append
+  // * Stocke le pixel dans le tableau de pixels
 }
 
 const game = new Game();
